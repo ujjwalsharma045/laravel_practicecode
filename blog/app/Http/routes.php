@@ -59,8 +59,10 @@ Route::post('admin/user/view/{id}', ['middleware' => 'auth','uses'=>'UserControl
 Route::get('admin/user/remove/{id}', ['middleware' => 'auth','uses'=>'UserController@admin_remove']);
 Route::post('admin/user/remove/{id}', ['middleware' => 'auth','uses'=>'UserController@admin_remove']);
 
+Route::group(['prefix'=>'api','middleware'=>'auth:api'], function(){
+  Route::resource('user', 'ApiController@index');
+});
+
 //Route::post('/', 'UserController@index');
-
-
 
 Route::get('/home', 'HomeController@index');
