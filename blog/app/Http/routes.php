@@ -15,12 +15,12 @@
     return view('welcome');
 });*/
 Route::auth();
-Route::get('/', ['middleware' => 'auth','uses'=>'UserController@index']);
-Route::get('user/', ['middleware' => 'auth','uses'=>'UserController@index']);
-Route::post('/', ['middleware' => 'auth','uses'=>'UserController@index']);
-Route::post('user/', ['middleware' => 'auth','uses'=>'UserController@index']);
-Route::get('user/add', ['middleware' => 'auth','uses'=>'UserController@add']);
-Route::post('user/add', ['middleware' => 'auth','uses'=>'UserController@add']);
+Route::get('/', ['as'=>'.', 'middleware' => 'auth','uses'=>'UserController@index']);
+Route::get('user/', ['as'=>'user', 'middleware' => 'auth','uses'=>'UserController@index']);
+Route::post('/', ['as'=>'.' , 'middleware' => 'auth','uses'=>'UserController@index']);
+Route::post('user/', ['as'=>'user' , 'middleware' => 'auth','uses'=>'UserController@index']);
+Route::get('user/add', ['as'=>'user.index' , 'middleware' => 'auth','uses'=>'UserController@add']);
+Route::post('user/add', ['as'=>'user.index' , 'middleware' => 'auth','uses'=>'UserController@add']);
 Route::get('user/edit/{id}', ['as'=>'user.update', 'uses'=>'UserController@edit']);
 Route::patch('user/edit/{id}', ['as'=>'user.update', 'uses'=>'UserController@edit']);
 Route::get('user/index', ['as'=>'user.index' , 'middleware' => 'auth','uses'=>'UserController@index']);
@@ -58,6 +58,10 @@ Route::post('admin/user/view/{id}', ['middleware' => 'auth','uses'=>'UserControl
 
 Route::get('admin/user/remove/{id}', ['middleware' => 'auth','uses'=>'UserController@admin_remove']);
 Route::post('admin/user/remove/{id}', ['middleware' => 'auth','uses'=>'UserController@admin_remove']);
+
+Route::get('admin/settings/index', ['as'=>'admin.settings.index', 'middleware' => 'auth','uses'=>'SettingsController@admin_index']);
+Route::patch('admin/settings/index', ['as'=>'admin.settings.index', 'middleware' => 'auth','uses'=>'SettingsController@admin_index']);
+
 
 Route::group(['prefix'=>'api','middleware'=>'auth:api'], function(){
   Route::resource('user', 'ApiController@index');
