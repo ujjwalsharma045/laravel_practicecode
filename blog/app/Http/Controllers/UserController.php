@@ -7,6 +7,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesResources;
+use App\Jobs\NewsletterEmail;
 use App\Events\Useradded;
 use App\User;
 use App\UserProfile;
@@ -134,12 +135,13 @@ class UserController extends BaseController
 		
            $input = $request->all();			
 		   if($lastid = $model->create($input)){
-                           			  			  
+                     			  			  
               $request['user_id'] = $lastid->id;		
 
               			 
 		      $userprofilemodel = new UserProfile;
 			  $userprofilemodel->create($request->all());
+			  
 			  Event::fire(new Useradded($request));
 			  /*Mail::send('emails.user' , [
 			     'email'=>$request['email'],
@@ -227,8 +229,15 @@ class UserController extends BaseController
               			 
 		      $userprofilemodel = new UserProfile;
 			  $userprofilemodel->create($request->all());
+			  $mailrequest = [
+			     'email'=>$request['email'],
+				 'first_name'=>$request['first_name'],
+				 'address'=>$request['address'],
+				 'contact'=>$request['contact']
+			  ];
+			  $this->dispatch(new NewsletterEmail($mailrequest));
 			  
-			  Mail::send('emails.user' , [
+			  /* Mail::send('emails.user' , [
 			     'email'=>$request['email'],
 			     'name'=>$request['first_name'],
 			     'address'=>$request['address'],
@@ -236,7 +245,7 @@ class UserController extends BaseController
 		      ] , function($message)use($request){
 				    $message->from('hello@app.com', 'Your Application');
 					$message->to($request['email'], @$request['first_name'])->subject('Thanks For Registration');
-			  });
+			  }); */
 			  
 		      Session::flash('flashmessage' , 'User added successfully');
 			  
@@ -248,7 +257,7 @@ class UserController extends BaseController
 		   return redirect('admin/user/index');
 		}
 		
-		return view('user.adduser', []);
+		return view('admin.user.adduser', []);
 	}
 
     function admin_view($id){
@@ -299,7 +308,7 @@ class UserController extends BaseController
 			 return redirect('admin/user/index');
 		}
 		
-		return view('user.edit', [])->withUser($user);
+		return view('admin.user.edit', [])->withUser($user);
 	}
 
     function admin_remove($id){

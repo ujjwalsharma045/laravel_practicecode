@@ -62,6 +62,9 @@ Route::post('admin/user/remove/{id}', ['middleware' => 'auth','uses'=>'UserContr
 Route::get('admin/settings/index', ['as'=>'admin.settings.index', 'middleware' => 'auth','uses'=>'SettingsController@admin_index']);
 Route::patch('admin/settings/index', ['as'=>'admin.settings.index', 'middleware' => 'auth','uses'=>'SettingsController@admin_index']);
 
+Route::get('admin/subscribe/index', ['as'=>'admin.subscribe.index', 'middleware' => 'admin','uses'=>'SubscribeController@admin_index']);
+Route::post('admin/subscribe/index', ['as'=>'admin.subscribe.index', 'middleware' => 'admin','uses'=>'SubscribeController@admin_index']);
+
 
 Route::group(['prefix'=>'api','middleware'=>'auth:api'], function(){
   Route::resource('user', 'ApiController@index');
