@@ -31,11 +31,13 @@ class SendSubscriptionEmail extends Job implements ShouldQueue
     public function handle()
     {
         //		
-		Mail::send('emails.subscription' , [			    
-			     'content'=>$this->request['content'],			    
-		      ] , function($message){
-				    $message->from('hello@app.com', 'Your Application');
-					$message->to($this->request['email'])->subject('Thanks For subscription with queue');
-		});
+		foreach($this->request['email'] as $key=>$value){
+			Mail::send('emails.subscription' , [			    
+					 'content'=>$this->request['content'],			    
+				  ] , function($message)use($value){
+						$message->from('hello@app.com', 'Your Application');
+						$message->to($value)->subject('Thanks For subscription with queue');
+			});
+		}
     }
 }
